@@ -62,7 +62,7 @@ const client = new SupportClient({
 | `serviceUrl` | hds-support-service base URL. |
 | `scopeStreamId` | The host's `:_cmc:apps:<app code>` stream (must exist, as hds-webapp's `ensureCmcPatientAppScope` does). |
 | `fetch` | Optional fetch implementation. |
-| `placeholderStreamName` | Name given to `hds-support` if the client creates it (default "HDS support"). |
+| `placeholderStreamName` | Name given to `hds-support` if the client creates it (default "Health Data Safe support (holds no data)", the data model's name). |
 | `onError` | Live-feed failures. |
 
 Keep one client per signed-in connection (e.g. in a context) and call `client.stop()` on sign-out.

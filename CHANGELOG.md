@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1] - 2026-11-02
+
+### Fixed
+
+- The default `placeholderStreamName` is the data model's stream name, "Health Data Safe support (holds no data)"
+  (data-model 3.38.0), not "HDS support", so every consumer creates the consent anchor with the same name.
+
 ## [0.1.0] - 2026-11-02
 
 ### Added

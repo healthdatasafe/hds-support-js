@@ -1,6 +1,6 @@
 {
   "name": "hds-support-js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "HDS support channel — headless SupportClient + React <SupportChat> to chat with the Health Data Safe team over CMC",
   "type": "module",
   "main": "js/hds-support.js",

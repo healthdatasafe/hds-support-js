@@ -18,7 +18,7 @@ export interface SupportClientOptions {
   scopeStreamId: string;
   /** Defaults to the global `fetch`. */
   fetch?: typeof fetch;
-  /** Name of the placeholder stream if the client has to create it (default "HDS support"). */
+  /** Name of the placeholder stream if the client has to create it (default: the data model's name, "Health Data Safe support (holds no data)"). */
   placeholderStreamName?: string;
   /** Delay before the extra `updateEvents()` that covers the monitor start race (default 1500 ms). */
   monitorSettleMs?: number;
@@ -96,7 +96,7 @@ export class SupportClient implements SupportClientLike {
     this.cmc = { ...hdsCmc, ...(opts.cmc ?? {}) } as Cmc;
     this.monitorFactory = opts.monitorFactory ?? createPryvMonitor;
     this.pryvForOffer = opts.pryv ?? hdsPryv;
-    this.placeholderStreamName = opts.placeholderStreamName ?? 'HDS support';
+    this.placeholderStreamName = opts.placeholderStreamName ?? 'Health Data Safe support (holds no data)';
     this.monitorSettleMs = opts.monitorSettleMs ?? 1500;
     this.onError = opts.onError;
   }
