@@ -93,9 +93,10 @@ describe('[SC-S] status, prepareJoin, join', () => {
   });
 
   it('[SC-S4] prepareJoin tolerates an existing placeholder stream', async () => {
+    // the core's real answer: the existing stream's id is in data.id (demo rc.69, a user re-joining)
     const { client } = setup({
       rels: [[]],
-      handlers: { 'streams.create': () => { throw Object.assign(new Error('exists'), { innerObject: { id: 'item-already-exists' } }); } }
+      handlers: { 'streams.create': () => { throw Object.assign(new Error('exists'), { innerObject: { id: 'item-already-exists', data: { id: 'hds-support' } } }); } }
     });
     await expect(client.prepareJoin()).resolves.toBeTruthy();
   });

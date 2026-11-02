@@ -193,7 +193,8 @@ export class SupportClient implements SupportClientLike {
     try {
       await this.connection.apiOne('streams.create', { id: config.placeholderStreamId, name: this.placeholderStreamName }, 'stream');
     } catch (e) {
-      if (errorIdOf(e) === 'item-already-exists') return;
+      // the core names the existing stream in `data.id`, so errorIdOf (which prefers `data.id`) cannot be used here
+      if ((e as { innerObject?: { id?: unknown } })?.innerObject?.id === 'item-already-exists') return;
       throw asUpstream(e, `creating the "${config.placeholderStreamId}" stream failed`);
     }
   }

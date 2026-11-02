@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2] - 2026-11-02
+
+### Fixed
+
+- Joining no longer fails with "upstream-error" when the `hds-support` consent anchor already exists, which is every
+  join: `prepareJoin()` creates it and `join()` creates it again. The core's `item-already-exists` answer names the
+  existing stream in `data.id`, which `errorIdOf` reads first, so the error was not recognised. Found on demo.
+
 ## [0.1.1] - 2026-11-02
 
 ### Fixed
