@@ -1,0 +1,27 @@
+{
+  "appId": null,
+  "type": "lib",
+  "description": "Support channel client + React widget — chat with the Health Data Safe team over CMC (plan 117)",
+  "produces": {
+    "items": [],
+    "eventTypes": [
+      "message/chat-cmc",
+      "consent/accept-cmc"
+    ],
+    "note": "Chat lines on the support relationship's chat stream; the accept trigger of the support group's open-link invite"
+  },
+  "consumes": {
+    "items": [],
+    "eventTypes": [
+      "message/chat-cmc",
+      "consent/accept-cmc"
+    ],
+    "note": "Reads the support thread and the user's accepted relationships"
+  },
+  "streams": [
+    "hds-support"
+  ],
+  "access": {
+    "note": "Library — runs within the host app's context (personal token needed to accept). Mints a 5-minute shared read access on hds-support as notify-me proof, deleted after use."
+  }
+}
