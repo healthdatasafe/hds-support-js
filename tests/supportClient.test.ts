@@ -86,7 +86,7 @@ describe('[SC-S] status, prepareJoin, join', () => {
     const o = await client.prepareJoin();
     expect(conn.calls[0]).toEqual({ method: 'streams.create', params: { id: 'hds-support', name: 'Health Data Safe support (holds no data)' } });
     expect(cmc.readOffer).toHaveBeenCalledWith(LINK_V3, expect.anything());
-    expect(o.permissions).toEqual([{ streamId: 'hds-support', level: 'read', defaultName: 'HDS support' }]);
+    expect(o.permissions).toEqual([{ streamId: 'hds-support', level: 'read', defaultName: 'Health Data Safe support (holds no data)' }]);
     expect(o.consent).toEqual({ en: 'DPO notice EN', fr: 'Avis DPO FR' });
     expect(o.accessType).toBe('shared');
     expect(o.displayName).toBe('Health Data Safe team');
