@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.3] - 2026-11-06
+
+### Changed
+
+- hds-lib `2.40.0` (pryv `3.18.0`, `@pryv/cmc` `3.23.0`) and hds-forms-js `0.28.1`, one copy of each.
+
+### Fixed
+
+- Since pryv `3.18.0` `connection.username()` and `accessInfo()` reject on a refused token instead of resolving
+  `{ error }` (pryv/lib-js#80). Reading the own username now maps that rejection to a `SupportError`
+  (`upstream-error`) instead of letting the raw error escape `threadInfoOrThrow()`.
+
 ## [0.1.2] - 2026-11-02
 
 ### Fixed

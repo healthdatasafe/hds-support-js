@@ -216,6 +216,14 @@ describe('[SC-T] thread, send, userSlug', () => {
     expect(info.localChatStreamId).toBe(`${TEAM}:chats:${GROUP_SLUG}`);
   });
 
+  it('[SC-T3b] a refused token (username() rejects, pryv >= 3.18.0) is upstream-error', async () => {
+    const bare = grantAccess({ permissions: [{ streamId: 'hds-support', level: 'read' }], clientData: { cmc: { role: 'counterparty', counterparty: { username: 'hds-support', host: 'datasafe.dev' } } } });
+    const { client, conn } = setup({ handlers: { 'accesses.get': () => [bare] } });
+    conn.username = async () => { throw new Error('invalid-access-token'); };
+    const err = await rejection(client.threadInfoOrThrow());
+    expect(err.id).toBe('upstream-error');
+  });
+
   it('[SC-T4] send writes message/chat-cmc on the local chat stream (the hds-webapp path)', async () => {
     const { client, conn } = setup({ handlers: { 'events.create': (p) => ({ id: 'new-1', time: 50, type: p.type, streamIds: p.streamIds, content: p.content }) } });
     const m = await client.send('  Is anyone there?  ');

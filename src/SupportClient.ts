@@ -302,15 +302,20 @@ export class SupportClient implements SupportClientLike {
 
   // ---- Thread ---- //
 
+  // Since pryv 3.18.0 `username()` and `accessInfo()` reject on a refused token instead of resolving `{ error }`.
   private async ownUsername (): Promise<string> {
-    if (typeof this.connection.username === 'function') {
-      const u = await this.connection.username();
-      if (typeof u === 'string' && u !== '') return u;
-    }
-    if (typeof this.connection.accessInfo === 'function') {
-      const info = await this.connection.accessInfo();
-      const u = info?.user?.username;
-      if (typeof u === 'string' && u !== '') return u;
+    try {
+      if (typeof this.connection.username === 'function') {
+        const u = await this.connection.username();
+        if (typeof u === 'string' && u !== '') return u;
+      }
+      if (typeof this.connection.accessInfo === 'function') {
+        const info = await this.connection.accessInfo();
+        const u = info?.user?.username;
+        if (typeof u === 'string' && u !== '') return u;
+      }
+    } catch (e) {
+      throw asUpstream(e, 'cannot read this account\'s username');
     }
     throw new SupportError('upstream-error', 'cannot read this account\'s username');
   }
