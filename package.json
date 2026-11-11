@@ -74,5 +74,10 @@
   "dependencies": {
     "hds-forms-js": "git+https://github.com/healthdatasafe/hds-forms-js.git#0.28.1",
     "hds-lib": "git+https://github.com/healthdatasafe/hds-lib-js.git#2.40.0"
+  },
+  "allowScripts": {
+    "github:healthdatasafe/hds-feminine-cycle-ui": true,
+    "github:healthdatasafe/hds-forms-js": true,
+    "github:healthdatasafe/hds-lib-js": true
   }
 }
