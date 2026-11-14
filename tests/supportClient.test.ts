@@ -29,8 +29,7 @@ function setup (opts: {
     scopeStreamId: HOST_SCOPE,
     fetch: net.fetch,
     cmc: cmc as any,
-    monitorFactory: opts.monitorFactory,
-    monitorSettleMs: 5
+    monitorFactory: opts.monitorFactory
   });
   return { client, conn, net, cmc };
 }
@@ -253,7 +252,7 @@ describe('[SC-L] live feed', () => {
     return m;
   }
 
-  it('[SC-L1] monitors cmc.scopes.chats for the thread, re-fetches once after the start race, dedupes', async () => {
+  it('[SC-L1] monitors cmc.scopes.chats for the thread, no extra fetch after start, dedupes', async () => {
     const mon = fakeMonitor();
     const factory = vi.fn(() => mon);
     const { client } = setup({ monitorFactory: factory, handlers: { 'events.get': () => [chatEvent('e1', 10, 'Hello')] } });
@@ -265,7 +264,7 @@ describe('[SC-L] live feed', () => {
     const scope = (factory.mock.calls[0] as unknown[])[1];
     expect(scope).toEqual({ streams: [LOCAL_CHAT], types: ['message/chat-cmc'] });
     expect(mon.start).toHaveBeenCalledTimes(1);
-    expect(mon.updateEvents).toHaveBeenCalledTimes(1);
+    expect(mon.updateEvents).not.toHaveBeenCalled();
     mon.emit('event', chatEvent('e1', 10, 'Hello'));
     mon.emit('event', chatEvent('e2', 20, 'Bob: On it', TEAM_FROM));
     mon.emit('event', chatEvent('e2', 20, 'Bob: On it', TEAM_FROM));
@@ -274,13 +273,14 @@ describe('[SC-L] live feed', () => {
     expect(mon.stop).toHaveBeenCalledTimes(1);
   });
 
-  it('[SC-L2] unsubscribing before the start completes stops without a settle fetch', async () => {
+  it('[SC-L2] unsubscribing before the start completes stops the monitor', async () => {
     const mon = fakeMonitor();
     const { client } = setup({ monitorFactory: () => mon });
     const off = client.onMessage(() => {});
     off();
     await tick(30);
     expect(mon.updateEvents).not.toHaveBeenCalled();
+    expect(mon.start).not.toHaveBeenCalled();
   });
 });
 
