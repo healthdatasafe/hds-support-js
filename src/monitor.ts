@@ -3,15 +3,13 @@ import type { SupportConnection, SupportMonitor } from './types';
 
 /**
  * Default live feed: a `pryv.Monitor` on the chat scope with the socket.io update method (hds-lib's pryv
- * carries both plugins). `start()` resolves after the first fetch and once the socket method is attached.
- *
- * `@pryv/monitor` 3.17.3 resolves `start()` before the socket has subscribed (B-2026-11-01-1), so a message
- * landing in that window is only seen at the next change; `SupportClient` therefore calls `updateEvents()`
- * once more after a short settle.
+ * carries both plugins). The socket method is attached before `start()`, so `start()` resolves once the first
+ * fetch is done and the socket has subscribed; the socket then fetches once more what changed in between
+ * (`@pryv/monitor` 3.18+, B-2026-11-01-1).
  */
 export function createPryvMonitor (connection: SupportConnection, scope: { streams: string[]; types?: string[] }): SupportMonitor {
   const Monitor = (pryv as any).Monitor;
-  const monitor = new Monitor(connection, scope);
+  const monitor = new Monitor(connection, scope).addUpdateMethod(new Monitor.UpdateMethod.Socket());
   const wrapper: SupportMonitor = {
     on (event, cb) {
       monitor.on(event, cb);
@@ -19,7 +17,6 @@ export function createPryvMonitor (connection: SupportConnection, scope: { strea
     },
     async start () {
       await monitor.start();
-      monitor.addUpdateMethod(new Monitor.UpdateMethod.Socket());
     },
     updateEvents: () => monitor.updateEvents(),
     stop: () => { monitor.stop(); }

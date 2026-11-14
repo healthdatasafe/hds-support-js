@@ -1,6 +1,6 @@
 {
   "name": "hds-support-js",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "HDS support channel — headless SupportClient + React <SupportChat> to chat with the Health Data Safe team over CMC",
   "type": "module",
   "main": "js/hds-support.js",
@@ -73,7 +73,7 @@
   },
   "dependencies": {
     "hds-forms-js": "git+https://github.com/healthdatasafe/hds-forms-js.git#0.28.1",
-    "hds-lib": "git+https://github.com/healthdatasafe/hds-lib-js.git#2.40.0"
+    "hds-lib": "git+https://github.com/healthdatasafe/hds-lib-js.git#2.51.2"
   },
   "allowScripts": {
     "github:healthdatasafe/hds-feminine-cycle-ui": true,

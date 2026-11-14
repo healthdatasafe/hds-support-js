@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0] - 2026-11-14
+
+### Changed
+
+- hds-lib `2.51.2` (pryv `3.19.0`), B-2026-11-14-2. The default monitor attaches the socket update method before
+  `start()`, so `start()` resolves once the socket has subscribed (`@pryv/monitor` 3.18+), and the socket fetches once
+  more what changed in between.
+
+### Removed
+
+- **Breaking:** the `monitorSettleMs` option and the settle `updateEvents()` after `start()` (the B-2026-11-01-1
+  workaround, fixed in pryv 3.18.0).
+
 ## [0.1.3] - 2026-11-06
 
 ### Changed

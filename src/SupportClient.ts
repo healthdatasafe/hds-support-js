@@ -20,8 +20,6 @@ export interface SupportClientOptions {
   fetch?: typeof fetch;
   /** Name of the placeholder stream if the client has to create it (default: the data model's name, "Health Data Safe support (holds no data)"). */
   placeholderStreamName?: string;
-  /** Delay before the extra `updateEvents()` that covers the monitor start race (default 1500 ms). */
-  monitorSettleMs?: number;
   /** Failures of the live feed (the `onMessage` callbacks never receive errors). */
   onError?: (error: unknown) => void;
   /** Test seams: CMC helpers (merged over hds-lib's `cmc`), the live feed, the `pryv` handed to `readOffer`. */
@@ -69,7 +67,6 @@ export class SupportClient implements SupportClientLike {
   private readonly monitorFactory: SupportMonitorFactory;
   private readonly pryvForOffer: unknown;
   private readonly placeholderStreamName: string;
-  private readonly monitorSettleMs: number;
   private readonly onError?: (error: unknown) => void;
 
   private config: SupportConfig | null = null;
@@ -79,7 +76,6 @@ export class SupportClient implements SupportClientLike {
   private readonly listeners = new Set<(m: SupportMessage) => void>();
   private monitor: SupportMonitor | null = null;
   private monitorGeneration = 0;
-  private settleTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor (opts: SupportClientOptions) {
     if (opts?.connection == null) throw new Error('SupportClient: connection is required');
@@ -97,7 +93,6 @@ export class SupportClient implements SupportClientLike {
     this.monitorFactory = opts.monitorFactory ?? createPryvMonitor;
     this.pryvForOffer = opts.pryv ?? hdsPryv;
     this.placeholderStreamName = opts.placeholderStreamName ?? 'Health Data Safe support (holds no data)';
-    this.monitorSettleMs = opts.monitorSettleMs ?? 1500;
     this.onError = opts.onError;
   }
 
@@ -450,16 +445,7 @@ export class SupportClient implements SupportClientLike {
     monitor.on('error', (e: unknown) => this.onError?.(e));
     this.monitor = monitor;
     await monitor.start();
-    if (generation !== this.monitorGeneration) {
-      monitor.stop();
-      return;
-    }
-    // B-2026-11-01-1: start() resolves before the socket subscribes; fetch once more after it settled.
-    this.settleTimer = setTimeout(() => {
-      this.settleTimer = null;
-      if (generation !== this.monitorGeneration) return;
-      monitor.updateEvents().catch((e) => this.onError?.(e));
-    }, this.monitorSettleMs);
+    if (generation !== this.monitorGeneration) monitor.stop();
   }
 
   private handleLiveEvent (event: any): void {
@@ -473,10 +459,6 @@ export class SupportClient implements SupportClientLike {
 
   private stopMonitor (): void {
     this.monitorGeneration++;
-    if (this.settleTimer != null) {
-      clearTimeout(this.settleTimer);
-      this.settleTimer = null;
-    }
     if (this.monitor != null) {
       try { this.monitor.stop(); } catch (_e) { /* already stopped */ }
       this.monitor = null;
