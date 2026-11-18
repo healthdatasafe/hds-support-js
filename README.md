@@ -156,3 +156,7 @@ npm test
 npm run lint
 npm run typecheck
 ```
+
+## License
+
+[BSD-3-Clause](LICENSE)
