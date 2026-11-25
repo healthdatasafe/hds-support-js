@@ -1,5 +1,6 @@
 import { cmc as hdsCmc, pryv as hdsPryv } from 'hds-lib';
 import { SupportError, serviceError } from './errors';
+import { pickLanguage } from './language';
 import { CHAT_EVENT_TYPE, MAX_MESSAGE_LENGTH, parseSupportMessage, toThread } from './messages';
 import { createPryvMonitor } from './monitor';
 import type {
@@ -137,7 +138,8 @@ export class SupportClient implements SupportClientLike {
       teamStreamId: c.teamStreamId,
       placeholderStreamId: c.placeholderStreamId,
       openLinkUrl: c.openLinkUrl,
-      configVersion: typeof c.configVersion === 'number' ? c.configVersion : 0
+      configVersion: typeof c.configVersion === 'number' ? c.configVersion : 0,
+      languages: Array.isArray(c.languages) && c.languages.length > 0 ? c.languages.filter((l: unknown) => typeof l === 'string') : ['en', 'fr']
     };
     return this.config;
   }
@@ -480,8 +482,8 @@ export class SupportClient implements SupportClientLike {
    * placeholder stream, minted on the user's own account; the service checks its token with `accessInfo` on the
    * accepter's endpoint, which it builds itself. The access is deleted again once the service answered.
    *
-   * `lang` is the language of the one email (SERVICE-API.md v1.1): any `fr*` value sends `"fr"`, anything else
-   * `"en"`; omitted, the service defaults to English. A `404 unknown-thread` means the user is no longer joined.
+   * `lang` is the language of the one email (SERVICE-API.md v1.1): sent as the one of the service's `languages` it asks
+   * for (`fr-CH` sends `"fr"`), else `"en"`; omitted, the service defaults to English. A `404 unknown-thread` means the user is no longer joined.
    */
   async notifyMe (email: string, opts: { consent: boolean; lang?: string }): Promise<void> {
     if (opts?.consent !== true) throw new SupportError('consent-required', 'the user must consent to store the address');
@@ -507,7 +509,7 @@ export class SupportClient implements SupportClientLike {
     }
     try {
       const body: Record<string, unknown> = { userSlug: info.userSlug, email: address, consent: true, proofToken: access.token };
-      if (typeof opts.lang === 'string' && opts.lang !== '') body.lang = opts.lang.toLowerCase().startsWith('fr') ? 'fr' : 'en';
+      if (typeof opts.lang === 'string' && opts.lang !== '') body.lang = pickLanguage(opts.lang, config.languages) ?? 'en';
       await this.request('POST', '/notify', body);
     } finally {
       if (access.id != null) {

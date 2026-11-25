@@ -329,6 +329,27 @@ describe('[SC-P] presence + notifyMe', () => {
     expect(posted.lang).toBe(expected);
   });
 
+  it.each([
+    [['en', 'fr', 'pt-BR'], 'pt', 'pt-BR'],
+    [['en', 'fr', 'pt-BR'], 'PT_br', 'pt-BR'],
+    [['en', 'pt', 'pt-BR'], 'pt-PT', 'pt'],
+    [['en', 'fr', 'it'], 'it-CH', 'it'],
+    [['en', 'fr'], 'it', 'en'],
+    [[], 'fr-CH', 'fr'],
+    ['fr', 'it', 'en']
+  ])('[SC-P2d] with the service languages %j, notifyMe sends lang %s as "%s"', async (languages, lang, expected) => {
+    let posted: any = null;
+    const { client } = setup({
+      handlers: { 'accesses.create': () => ({ id: 'p', token: 't' }), 'accesses.delete': () => ({}) },
+      routes: {
+        'GET /public/config': { status: 200, body: config({ languages }) },
+        'POST /notify': (init: any) => { posted = JSON.parse(init.body); return { status: 204 }; }
+      }
+    });
+    await client.notifyMe('alice@example.org', { consent: true, lang });
+    expect(posted.lang).toBe(expected);
+  });
+
   it('[SC-P2c] notifyMe without lang leaves it out (the service defaults to en)', async () => {
     let posted: any = null;
     const { client } = setup({

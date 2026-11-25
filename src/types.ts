@@ -8,6 +8,8 @@ export interface SupportConfig {
   placeholderStreamId: string;
   openLinkUrl: string;
   configVersion: number;
+  /** The languages of the notification email. A service that does not publish them knows `en` and `fr`. */
+  languages: string[];
 }
 
 /** `GET /public/presence`. */

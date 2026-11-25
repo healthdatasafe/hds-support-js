@@ -110,6 +110,13 @@ describe('[SCR-N] not joined', () => {
     expect(buttonByText(c, 'Autoriser')).not.toBeNull();
   });
 
+  it.each([['fr-CH', 'Texte DPO FR', SUPPORT_CHAT_LABELS_FR], ['FR', 'Texte DPO FR', SUPPORT_CHAT_LABELS_FR], ['it', 'DPO text EN', SUPPORT_CHAT_LABELS_EN], ['constructor', 'DPO text EN', SUPPORT_CHAT_LABELS_EN]])('[SCR-N2b] lang %s picks the consent text and the labels, English without them', async (lang, consent, labels) => {
+    const client = fakeClient({ status: vi.fn(async () => 'not-joined') });
+    const c = await mount(<SupportChat client={client} lang={lang} />);
+    expect(q(c, 'consent-panel')!.textContent).toContain(consent);
+    expect(c.textContent).toContain(labels.chatOnlyNotice);
+  });
+
   it('[SCR-N3] Allow joins and switches to the thread', async () => {
     const onJoined = vi.fn();
     const client = fakeClient({ status: vi.fn(async () => 'not-joined') });

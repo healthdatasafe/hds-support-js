@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent, KeyboardEvent, ReactNode } from 'react';
 import { ConsentPanel } from 'hds-forms-js';
 import { isSupportError } from '../errors';
+import { pickLanguage } from '../language';
 import { MAX_MESSAGE_LENGTH } from '../messages';
 import type { SupportClientLike, SupportMessage, SupportOffer, SupportPresence } from '../types';
 import { supportChatLabels } from './supportChatLabels';
@@ -10,7 +11,7 @@ import type { SupportChatLabels } from './supportChatLabels';
 export interface SupportChatProps {
   /** A `SupportClient` built by the host with its connection, service URL and scope. */
   client: SupportClientLike;
-  /** Picks the default label set (`'fr'` or `'en'`, default English). */
+  /** Language tag (`fr`, `pt-BR`): picks the default label set, the invite's consent text and the email's language. Default English. */
   lang?: string;
   /** Overrides of the default labels (`consent` overrides the embedded ConsentPanel's). */
   labels?: Partial<Omit<SupportChatLabels, 'consent'>> & { consent?: SupportChatLabels['consent'] };
@@ -220,7 +221,7 @@ export function SupportChat ({
   }
 
   if (phase === 'not-joined') {
-    const consentText = dpoText ?? (offer?.consent != null ? (offer.consent[lang] ?? offer.consent.en ?? null) : null);
+    const consentText = dpoText ?? (offer?.consent != null ? (offer.consent[pickLanguage(lang, Object.keys(offer.consent)) ?? 'en'] ?? null) : null);
     return (
       <div className={root} data-testid='support-not-joined'>
         <div className='p-4'>
