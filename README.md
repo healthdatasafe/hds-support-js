@@ -74,7 +74,7 @@ import { SupportChat } from 'hds-support-js';
 
 <SupportChat
   client={client}
-  lang={language}                  // 'en' | 'fr' default label sets
+  lang={language}                  // en, fr, es, it, pt-BR default label sets (closest match, else English)
   dpoText={t('support.dpo')}       // DPO notice on the consent screen (default: the invite's own consent text)
   defaultEmail={accountEmail}      // prefills the notify-me address, when the app can read it
   onJoined={() => refreshContacts()}
@@ -100,8 +100,10 @@ refresh whatever lists relationships (hds-webapp: contacts) so "Health Data Safe
 
 ### Labels
 
-All texts are injected. `SUPPORT_CHAT_LABELS_EN` and `SUPPORT_CHAT_LABELS_FR` are the defaults (`supportChatLabels(lang)`
-picks one); `labels` overrides any key, and `labels.consent` overrides the embedded `ConsentPanel` labels.
+All texts are injected. `SUPPORT_CHAT_LABELS_EN`, `_FR`, `_ES`, `_IT` and `_PT_BR` are the defaults (`supportChatLabels(lang)`
+picks one: `fr-CH` reads `fr`, `pt` and `pt-PT` read `pt-BR`, English without one); `labels` overrides any key, and
+`labels.consent` overrides the embedded `ConsentPanel` labels. The es, it and pt-BR sets are machine drafts awaiting a
+native review.
 
 ```tsx
 <SupportChat client={client} lang='fr' labels={{ intro: 'Une question ? Écrivez-nous.' }} />
@@ -119,7 +121,7 @@ picks one); `labels` overrides any key, and `labels.consent` overrides the embed
 | `onMessage(cb)` | unsubscribe | Monitor on `cmc.scopes.chats`, de-duplicated; stops with the last subscriber |
 | `send(text)` | `SupportMessage` | `events.create` of `message/chat-cmc` on the relationship chat stream |
 | `presence()` | `{ online, agents }` | `GET /public/presence` |
-| `notifyMe(email, { consent: true, lang? })` | `void` | proof access + `POST /notify`; `lang` (`fr*` → `"fr"`, else `"en"`) is the email's language; `<SupportChat>` passes its `lang` |
+| `notifyMe(email, { consent: true, lang? })` | `void` | proof access + `POST /notify`; `lang` (the closest of the service's `languages`, else `"en"`) is the email's language; `<SupportChat>` passes its `lang` |
 | `threadInfoOrThrow()` | `SupportThreadInfo` | chat streams and `userSlug` |
 | `stop()` | | stops the live feed |
 

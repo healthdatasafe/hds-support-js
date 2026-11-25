@@ -22,5 +22,12 @@ export type {
 // React widget
 export { SupportChat } from './components/SupportChat';
 export type { SupportChatProps } from './components/SupportChat';
-export { SUPPORT_CHAT_LABELS_EN, SUPPORT_CHAT_LABELS_FR, supportChatLabels } from './components/supportChatLabels';
+export {
+  SUPPORT_CHAT_LABELS_EN,
+  SUPPORT_CHAT_LABELS_FR,
+  SUPPORT_CHAT_LABELS_ES,
+  SUPPORT_CHAT_LABELS_IT,
+  SUPPORT_CHAT_LABELS_PT_BR,
+  supportChatLabels
+} from './components/supportChatLabels';
 export type { SupportChatLabels } from './components/supportChatLabels';

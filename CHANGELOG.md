@@ -6,7 +6,9 @@
 
 - Any language by data (plan 138): the labels, the invite's consent text and the email's language are picked by tag (`fr-CH`
   reads `fr`, `pt` reads `pt-BR`), English without them. The email's language is one of the service's `languages`
-  (`/public/config`), `en` and `fr` for a service that does not publish them. No new language yet.
+  (`/public/config`), `en` and `fr` for a service that does not publish them.
+- Spanish, Italian and Brazilian Portuguese labels (plan 138): `SUPPORT_CHAT_LABELS_ES`, `_IT`, `_PT_BR` (`pt` and `pt-PT`
+  read `pt-BR`). Machine drafts, shipped before a native review.
 
 ## [0.2.0] - 2026-11-14
 

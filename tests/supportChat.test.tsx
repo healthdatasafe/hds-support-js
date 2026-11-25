@@ -4,7 +4,15 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Root } from 'react-dom/client';
 import { SupportChat } from '../src/components/SupportChat';
-import { SUPPORT_CHAT_LABELS_EN, SUPPORT_CHAT_LABELS_FR } from '../src/components/supportChatLabels';
+import {
+  SUPPORT_CHAT_LABELS_EN,
+  SUPPORT_CHAT_LABELS_ES,
+  SUPPORT_CHAT_LABELS_FR,
+  SUPPORT_CHAT_LABELS_IT,
+  SUPPORT_CHAT_LABELS_PT_BR,
+  supportChatLabels
+} from '../src/components/supportChatLabels';
+import type { SupportChatLabels } from '../src/components/supportChatLabels';
 import { SupportError } from '../src/errors';
 import type { SupportClientLike, SupportMessage, SupportOffer } from '../src/types';
 
@@ -110,11 +118,51 @@ describe('[SCR-N] not joined', () => {
     expect(buttonByText(c, 'Autoriser')).not.toBeNull();
   });
 
-  it.each([['fr-CH', 'Texte DPO FR', SUPPORT_CHAT_LABELS_FR], ['FR', 'Texte DPO FR', SUPPORT_CHAT_LABELS_FR], ['it', 'DPO text EN', SUPPORT_CHAT_LABELS_EN], ['constructor', 'DPO text EN', SUPPORT_CHAT_LABELS_EN]])('[SCR-N2b] lang %s picks the consent text and the labels, English without them', async (lang, consent, labels) => {
+  it.each([
+    ['fr-CH', 'Texte DPO FR', SUPPORT_CHAT_LABELS_FR],
+    ['FR', 'Texte DPO FR', SUPPORT_CHAT_LABELS_FR],
+    ['it', 'DPO text EN', SUPPORT_CHAT_LABELS_IT],
+    ['es-MX', 'DPO text EN', SUPPORT_CHAT_LABELS_ES],
+    ['pt', 'DPO text EN', SUPPORT_CHAT_LABELS_PT_BR],
+    ['pt-PT', 'DPO text EN', SUPPORT_CHAT_LABELS_PT_BR],
+    ['pt_br', 'DPO text EN', SUPPORT_CHAT_LABELS_PT_BR],
+    ['de', 'DPO text EN', SUPPORT_CHAT_LABELS_EN],
+    ['constructor', 'DPO text EN', SUPPORT_CHAT_LABELS_EN]
+  ])('[SCR-N2b] lang %s picks the consent text and the labels, English without them', async (lang, consent, labels) => {
     const client = fakeClient({ status: vi.fn(async () => 'not-joined') });
     const c = await mount(<SupportChat client={client} lang={lang} />);
     expect(q(c, 'consent-panel')!.textContent).toContain(consent);
     expect(c.textContent).toContain(labels.chatOnlyNotice);
+  });
+
+  it('[SCR-N2c] pt-BR reads the invite consent text the service writes under pt (CMC keys are 2-3 letters)', async () => {
+    const offer = { ...OFFER, consent: { en: 'Invite DPO text EN', pt: 'Texto DPO PT' } };
+    const client = fakeClient({ status: vi.fn(async () => 'not-joined'), prepareJoin: vi.fn(async () => offer) });
+    const c = await mount(<SupportChat client={client} lang='pt-BR' />);
+    expect(q(c, 'consent-panel')!.textContent).toContain('Texto DPO PT');
+    expect(c.textContent).toContain(SUPPORT_CHAT_LABELS_PT_BR.chatOnlyNotice);
+    expect(buttonByText(c, SUPPORT_CHAT_LABELS_PT_BR.consent.accept!)).not.toBeNull();
+  });
+
+  it('[SCR-N2d] every label set has the keys of English, none empty, with the same placeholders', () => {
+    const placeholders = (s: string): string[] => (s.match(/\{\w+\}/g) ?? []).sort();
+    const flat = (l: SupportChatLabels): Record<string, string> => {
+      const { consent, ...top } = l;
+      return { ...top, ...Object.fromEntries(Object.entries(consent).map(([k, v]) => [`consent.${k}`, v as string])) };
+    };
+    const fr = flat(SUPPORT_CHAT_LABELS_FR);
+    for (const set of [SUPPORT_CHAT_LABELS_FR, SUPPORT_CHAT_LABELS_ES, SUPPORT_CHAT_LABELS_IT, SUPPORT_CHAT_LABELS_PT_BR]) {
+      const f = flat(set);
+      expect(Object.keys(f).sort()).toEqual(Object.keys(fr).sort());
+      for (const [k, v] of Object.entries(f)) {
+        expect(v.trim(), k).not.toBe('');
+        expect(placeholders(v), k).toEqual(placeholders(fr[k]));
+      }
+    }
+    expect(supportChatLabels('pt-PT')).toBe(SUPPORT_CHAT_LABELS_PT_BR);
+    expect(supportChatLabels('es-419')).toBe(SUPPORT_CHAT_LABELS_ES);
+    expect(supportChatLabels('it-CH')).toBe(SUPPORT_CHAT_LABELS_IT);
+    expect(supportChatLabels('de')).toBe(SUPPORT_CHAT_LABELS_EN);
   });
 
   it('[SCR-N3] Allow joins and switches to the thread', async () => {
