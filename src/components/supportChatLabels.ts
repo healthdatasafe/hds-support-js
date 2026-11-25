@@ -1,4 +1,5 @@
 import type { ConsentPanelLabels } from 'hds-forms-js';
+import { pickLanguage } from '../language';
 
 /** Every text `<SupportChat>` draws. */
 export interface SupportChatLabels {
@@ -135,7 +136,10 @@ export const SUPPORT_CHAT_LABELS_FR: SupportChatLabels = {
   }
 };
 
-/** The default label set of a language (`fr*` → French, anything else → English). */
+/** The label sets by language tag; a new language is one set here. */
+const LABELS: Readonly<Record<string, SupportChatLabels>> = { en: SUPPORT_CHAT_LABELS_EN, fr: SUPPORT_CHAT_LABELS_FR };
+
+/** The default label set of a language (`fr-CH` → French), English for a language without one. */
 export function supportChatLabels (lang?: string | null): SupportChatLabels {
-  return typeof lang === 'string' && lang.toLowerCase().startsWith('fr') ? SUPPORT_CHAT_LABELS_FR : SUPPORT_CHAT_LABELS_EN;
+  return LABELS[pickLanguage(lang, Object.keys(LABELS)) ?? 'en'];
 }

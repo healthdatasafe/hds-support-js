@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Any language by data (plan 138): the labels, the invite's consent text and the email's language are picked by tag (`fr-CH`
+  reads `fr`, `pt` reads `pt-BR`), English without them. The email's language is one of the service's `languages`
+  (`/public/config`), `en` and `fr` for a service that does not publish them. No new language yet.
+
 ## [0.2.0] - 2026-11-14
 
 ### Changed
