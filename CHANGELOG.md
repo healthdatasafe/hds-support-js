@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Development
+
+- Dev dependencies: vitest 3 → 4.1.12 and happy-dom 20 → 21.0.4, which clears the four `npm audit` findings (tinypool,
+  @vitest/mocker, happy-dom). `allowScripts` now names every registry package with an install script: `esbuild` and
+  `@swc/core` are allowed (their postinstall checks or fetches the native binary vite and the SWC React plugin build
+  with), `fsevents` is denied (macOS only, ships a prebuilt binary).
+
 ## [0.4.0] - 2026-11-27
 
 ### Changed

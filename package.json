@@ -64,7 +64,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.0",
     "globals": "^15.14.0",
-    "happy-dom": "^20.14.6",
+    "happy-dom": "^21.0.4",
     "hds-feminine-cycle-ui": "github:healthdatasafe/hds-feminine-cycle-ui#0.18.0",
     "hds-forms-js": "github:healthdatasafe/hds-forms-js#0.56.1",
     "hds-lib": "github:healthdatasafe/hds-lib-js#2.75.0",
@@ -77,9 +77,12 @@
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.12"
   },
   "allowScripts": {
+    "@swc/core": true,
+    "esbuild": true,
+    "fsevents": false,
     "github:healthdatasafe/hds-feminine-cycle-ui": true,
     "github:healthdatasafe/hds-forms-js": true,
     "github:healthdatasafe/hds-lib-js": true
