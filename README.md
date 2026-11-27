@@ -24,11 +24,12 @@ v1.1, plan 117).
 
 ```json
 "dependencies": {
-  "hds-support-js": "git+https://github.com/healthdatasafe/hds-support-js.git#0.1.0"
+  "hds-support-js": "git+https://github.com/healthdatasafe/hds-support-js.git#0.4.0"
 }
 ```
 
-It depends on `hds-lib` and `hds-forms-js` (for `ConsentPanel`); React 19 is a peer dependency. Like `hds-forms-js`,
+`hds-lib` (≥ 2.74.0), `hds-forms-js` (≥ 0.56.0, for `ConsentPanel`) and React 19 are peer dependencies: the host
+installs them and the library uses the host's copy. Like `hds-forms-js`,
 the package exposes its TypeScript source to bundlers: in Vite put it in `optimizeDeps.exclude` and dedupe `hds-lib`.
 
 ### Styles

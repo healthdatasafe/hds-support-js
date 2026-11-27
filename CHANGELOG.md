@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.0] - 2026-11-27
+
+### Changed
+
+- **`hds-lib` and `hds-forms-js` are peer dependencies** with a minimum (hds-lib ≥ 2.74.0, hds-forms-js ≥ 0.56.0), no
+  longer dependencies at an exact tag (hds-lib 2.51.2, hds-forms-js 0.28.1). A host installs them itself and the library
+  uses the host's copy, as hds-forms-js does since 0.42.0. A host with newer pins than ours could not run a plain
+  `npm install` (ERESOLVE). Built and tested against hds-lib 2.75.0 and hds-forms-js 0.56.1 (dev dependencies, with
+  hds-forms-js's own peers hds-feminine-cycle-ui 0.18.0 and pdfjs-dist 6.4.299).
+
 ## [0.3.0] - 2026-11-25
 
 ### Added

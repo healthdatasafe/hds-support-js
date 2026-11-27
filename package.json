@@ -1,6 +1,6 @@
 {
   "name": "hds-support-js",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "HDS support channel — headless SupportClient + React <SupportChat> to chat with the Health Data Safe team over CMC",
   "type": "module",
   "main": "js/hds-support.js",
@@ -50,6 +50,8 @@
   "author": "Health Data Safe (https://www.healthdatasafe.org)",
   "license": "BSD-3-Clause",
   "peerDependencies": {
+    "hds-forms-js": "github:healthdatasafe/hds-forms-js#semver:>=0.56.0",
+    "hds-lib": "github:healthdatasafe/hds-lib-js#semver:>=2.74.0",
     "react": ">=19",
     "react-dom": ">=19"
   },
@@ -63,7 +65,11 @@
     "eslint-plugin-react-refresh": "^0.4.0",
     "globals": "^15.14.0",
     "happy-dom": "^20.14.6",
+    "hds-feminine-cycle-ui": "github:healthdatasafe/hds-feminine-cycle-ui#0.18.0",
+    "hds-forms-js": "github:healthdatasafe/hds-forms-js#0.56.1",
+    "hds-lib": "github:healthdatasafe/hds-lib-js#2.75.0",
     "neostandard": "^0.12.0",
+    "pdfjs-dist": "6.4.299",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "source-licenser": "^2.0.6",
@@ -72,10 +78,6 @@
     "typescript-eslint": "^8.20.0",
     "vite": "^6.0.0",
     "vitest": "^3.0.0"
-  },
-  "dependencies": {
-    "hds-forms-js": "git+https://github.com/healthdatasafe/hds-forms-js.git#0.28.1",
-    "hds-lib": "git+https://github.com/healthdatasafe/hds-lib-js.git#2.51.2"
   },
   "allowScripts": {
     "github:healthdatasafe/hds-feminine-cycle-ui": true,
