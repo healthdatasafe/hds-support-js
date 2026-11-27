@@ -3,7 +3,7 @@
 # This script sets up the hds-support-js build environment
 
 # working dir fix
-scriptsFolder=$(cd $(dirname "$0"); pwd)
+scriptsFolder=$(cd "$(dirname "$0")"; pwd)
 cd $scriptsFolder/..
 
 # check for well known prereqs that might be missing
